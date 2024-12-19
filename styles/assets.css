@@ -1,0 +1,27 @@
+header img {
+    width: 136px;
+    padding: 10px 0;
+    object-fit: cover;
+}
+
+.aot img {
+    height: 160px;
+    width: 100%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Dunkler Schatten */
+   
+
+}
+
+.aot-images {
+    width: 56px !important;
+    height: 56px !important; 
+    object-fit: contain !important;
+    box-shadow: none !important;
+}
+
+.aot-images:hover {
+    transform: scale(1.05);
+    transition: ease-in-out 0.2s;
+}

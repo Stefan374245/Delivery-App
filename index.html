@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bestell-App</title>
+
+    <link rel="icon" href="./assets/Favicon/favicon-16x16.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./styles/standard.css" />
+    <link rel="stylesheet" href="./styles/basket.css" />
+    <link rel="stylesheet" href="./styles/fonts.css" />
+    <link rel="stylesheet" href="./styles/assets.css" />
+  </head>
+  <body onload="init()">
+    <header>
+      <img src="./assets/Logo/Logo.png" alt="Logo" />
+    </header>
+
+    <main>
+      <section class="aot" id="aotSection"></section>
+      <div class="dish-wrapper">
+        <div class="food-content">
+          <section class="dish-content" id="tapasSection"></section>
+          <section class="dish-content" id="dishesSection"></section>
+          <section class="dish-content" id="postreSection"></section>
+        </div>
+        <section class="basket-wrapper" id="basketSection"></section>
+      </div>
+      <!--<section class="toggleBasket">
+        <a onclick="toggleBasket()" id="burger-button" class="burger_btn">
+          <img
+            class="basketOpen"
+            src="./assets/Favicon/basket.png"
+            alt="openBasket"
+          />
+          <img
+            class="basketClose"
+            src="./assets/Favicon/close_basket.png"
+            alt="closeBasket"
+          />
+        </a> -->
+    </main>
+    <footer></footer>
+  </body>
+  <script src="./scripts/basket.js"></script>
+  <script src="./scripts/db.js"></script>
+  <script src="./scripts/template.js"></script>
+  <script src="./scripts/renderScripts.js"></script>
+</html>

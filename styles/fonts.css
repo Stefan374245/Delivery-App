@@ -1,0 +1,53 @@
+.aot h1 {
+    font-size: 30px;
+    font-weight: bold;
+    padding-bottom: 8px;
+}
+
+.aot p {
+    color: orange;
+}
+
+
+.dishCard p {
+    font-weight: 400;
+}
+
+h2 img {
+    width: 44px;
+    aspect-ratio: 1;
+    object-fit: contain;
+    filter: sepia(1) saturate(5) hue-rotate(-35deg);
+    transition: filter 0.3s ease-in-out;
+  }
+
+  
+h2 img:hover {
+    transform: scale(1.2);
+    filter: sepia(1) saturate(10) hue-rotate(-40deg);
+  }
+
+.dishCard ins {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.subtitle {
+    justify-content: center;
+    color: orange;
+    padding-bottom: 12px;
+}
+
+
+.basketItem h2 {
+    font-size: 20px;
+  }
+
+.price {
+    color: orange;
+}
+
+.price span {
+    color: black;
+    padding-left: 3px;
+}

@@ -1,53 +1,79 @@
+h1 h2 h3 h4 {
+  margin: 0;
+}
+
 .aot h1 {
-    font-size: 30px;
-    font-weight: bold;
-    padding-bottom: 8px;
+  font-size: 30px;
+  font-weight: bold;
+  padding-bottom: 8px;
 }
 
 .aot p {
-    color: orange;
+  color: orange;
 }
-
 
 .dishCard p {
-    font-weight: 400;
+  font-weight: 400;
 }
 
-h2 img {
-    width: 44px;
-    aspect-ratio: 1;
-    object-fit: contain;
-    filter: sepia(1) saturate(5) hue-rotate(-35deg);
-    transition: filter 0.3s ease-in-out;
-  }
-
-  
-h2 img:hover {
-    transform: scale(1.2);
-    filter: sepia(1) saturate(10) hue-rotate(-40deg);
-  }
+.overlay p {
+  font-size: 18px;
+}
 
 .dishCard ins {
-    font-size: 16px;
-    cursor: pointer;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .subtitle {
-    justify-content: center;
-    color: orange;
-    padding-bottom: 12px;
+  color: orange;
+  padding-bottom: 12px;
 }
 
-
 .basketItem h2 {
-    font-size: 20px;
-  }
+  font-size: 20px;
+  margin-bottom: 10px;
+}
 
 .price {
-    color: orange;
+  color: orange;
 }
 
 .price span {
-    color: black;
-    padding-left: 3px;
+  color: black;
+  padding-left: 3px;
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: smaller;
+  }
+
+  .dishCard p,
+  .dishCard ins {
+    font-weight: 300;
+    font-size: smaller;
+  }
+}
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 24px !important;
+  }
+
+  .aot p {
+    font-size: smaller;
+  }
+ .dish-info h2 {
+    font-size: 18px;
+ }
+  .dishCard p,
+  .dishCard ins {
+    font-weight: 300;
+    font-size: smaller;
+  }
+  .overlay-content h3,
+  p {
+    font-size: smaller;
+  }
 }

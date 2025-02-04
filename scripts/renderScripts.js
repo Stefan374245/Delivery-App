@@ -4,30 +4,68 @@ function init() {
   renderDishContent();
   renderTapasContent();
   renderPostreContent();
-  renderBasket();
+  renderDrinksContent();
+  window.addEventListener("resize", function () {
+    renderBasket();
+  });
 }
 
 function renderAot() {
   let aotSection = document.getElementById("aotSection");
   aotSection.innerHTML = ``;
+  for (let i = 0; i < rating; i++) {
+    stars +=
+      '<img src="./assets/Favicon/star-filled.png" alt="Full Star" class="star">';
+  }
+  for (let i = rating; i < maxRating; i++) {
+    stars +=
+      '<img src="./assets/Favicon/star-empty.png" alt="Full Star" class="star">';
+  }
 
-  aotSection.innerHTML += aotTemplate();
+  aotSection.innerHTML += aotTemplate(rating, maxRating);
+}
+
+function renderContent(type, sectionId, title) {
+  let wrapper = document.getElementById(sectionId);
+  wrapper.innerHTML = ``;
+  wrapper.innerHTML = `<h2 class="subtitle">${title}</h2>`;
+
+  const items = getItemsByType(type);
+  for (let i = 0; i < items.length; i++) {
+    wrapper.innerHTML += generateTemplate(type, i);
+  }
 }
 
 function renderDishContent() {
+  renderContent('dishes', 'dishesSection', 'Hauptspeisen');
+}
+
+function renderTapasContent() {
+  renderContent('tapas', 'tapasSection', 'Vorspeisen');
+}
+
+function renderPostreContent() {
+  renderContent('postres', 'postreSection', 'Nachspeisen');
+}
+
+function renderDrinksContent() {
+  renderContent('drinks', 'drinksSection', 'Getränke');
+}
+
+/*function renderDishContent() {
   let dishWrapper = document.getElementById("dishesSection");
   dishWrapper.innerHTML = ``;
   dishWrapper.innerHTML = `<h2 class="subtitle">Hauptspeisen</h2>`;
 
   for (let j = 0; j < dishes.length; j++) {
-    dishWrapper.innerHTML += dishTemplate(j);
+    dishWrapper.innerHTML += generateTemplate(dishes, j);
   }
 }
 
 function renderTapasContent() {
   let tapasWrapper = document.getElementById("tapasSection");
   tapasWrapper.innerHTML = ``;
-  tapasWrapper.innerHTML = `<h2 class="subtitle">Tapas</h2>`;
+  tapasWrapper.innerHTML = `<h2 class="subtitle">Vorspeisen</h2>`;
 
   for (let k = 0; k < tapas.length; k++) {
     tapasWrapper.innerHTML += tapasTemplate(k);
@@ -44,50 +82,65 @@ function renderPostreContent() {
   }
 }
 
+function renderDrinksContent() {
+  let drinksWrapper = document.getElementById("drinksSection");
+  drinksWrapper.innerHTML = ``;
+  drinksWrapper.innerHTML = `<h2 class="subtitle">Getränke</h2>`;
+
+  for (let i = 0; i < drinks.length; i++) {
+    drinksWrapper.innerHTML += drinksTemplate(i);
+  }
+}*/
+
 function renderBasket() {
   let basketWrapper = document.getElementById("basketSection");
-  basketWrapper.innerHTML = ``;
   basketWrapper.innerHTML = `<h2 class="subtitle">Warenkorb</h2>`;
 
   if (basket.length === 0) {
-    basketWrapper.innerHTML = "<p>Noch nichts im Warenkorb.</p>";
+    basketWrapper.innerHTML += emptyBasketTemplate();
   } else {
-    let totalSum = 0;
-
-    // Generiere das HTML für jedes Element im Warenkorb und berechne die Gesamtsumme
-    for (let i = 0; i < basket.length; i++) {
-      totalSum += basket[i].price * basket[i].amount;
-      basketWrapper.innerHTML += basketTemplate(i);
-    }
-
-    // Berechne die Lieferkosten
-    let deliveryCosts = 5;
-    if (totalSum >= 20) {
-      deliveryCosts = 0;
-    } else {
-      deliveryCosts;
-    }
-
-    // Berechne die Gesamtsumme (mit Lieferkosten)
+    let totalSum = calculateTotalSum();
+    let deliveryCosts = calculateDeliveryCosts(totalSum);
     let totalWithDelivery = totalSum + deliveryCosts;
 
-    // Füge die Gesamtsumme und die Lieferkosten am Ende hinzu
-    basketWrapper.innerHTML += `
-          <div class="totalPrice">
-            <h4>Zwischensumme: ${totalSum.toFixed(2)} €</h4>
-            <p>Lieferkosten: ${deliveryCosts.toFixed(2)} €</p>
-            <h3>Gesamtkosten: ${totalWithDelivery.toFixed(2)} €</h3>
-          </div>
-          <hr>
-          <hr>
-        `;
+    renderBasketItems(basketWrapper);
+    renderTotal(basketWrapper, totalSum, deliveryCosts, totalWithDelivery);
   }
 }
 
-function toggleProductInfo(category, j) {
-  let productOverlay = document.getElementById(`overlay-${category}-${j}`);
-
-  if (productOverlay) {
-    productOverlay.classList.toggle("d_none");
+function renderBasketItems(basketWrapper) {
+  for (let i = 0; i < basket.length; i++) {
+    basketWrapper.innerHTML += basketTemplate(i);
   }
 }
+
+function renderTotal(
+  basketWrapper,
+  totalSum,
+  deliveryCosts,
+  totalWithDelivery
+) {
+  basketWrapper.innerHTML += renderTotalTemplate(totalSum, deliveryCosts, totalWithDelivery);
+}
+
+function placeOrder() {
+  basket = [];
+  saveToLocalStorage();
+
+  let basketWrapper = document.getElementById("basketSection");
+  basketWrapper.innerHTML = placeOrderTemplate();
+}
+
+document.addEventListener("click", function (event) {
+  let basketWrapper = document.getElementById("basketSection");
+  let basketIcon = document.querySelector(".basketIcon");
+
+  if (
+    basketWrapper.classList.contains("open") && 
+    !basketWrapper.contains(event.target) &&
+    !basketIcon.contains(event.target)
+  ) {
+    toggleBasket();
+  }
+});
+

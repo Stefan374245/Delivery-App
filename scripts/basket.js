@@ -1,77 +1,48 @@
-//Fügt ein Gericht zum Warenkorb hinzu oder erhöht die Menge, wenn es bereits vorhanden ist.
-function addToBasket(dishIndex) {
-  let dish = dishes[dishIndex]; // Holt das Gericht aus dem dishes Array anhand des Index
-  let found = false; // Flag, um zu prüfen, ob das Gericht bereits im Warenkorb ist
+function addToBasket(itemIndex, arrayName) {
+  let item = getItemByArrayName(itemIndex, arrayName);
+  if (!item) return;
 
-  // Durchläuft den Warenkorb, um zu prüfen, ob das Gericht bereits hinzugefügt wurde
-  for (let i = 0; i < basket.length; i++) {
-    if (basket[i].name === dish.name) {
-      // Durchläuft den Warenkorb, um zu prüfen, ob das Gericht bereits hinzugefügt wurde
-      basket[i].amount++;
-      found = true; // Markiert das Gericht als gefunden
-      break; // Bricht die Schleife ab, da das Gericht gefunden wurde
-    }
-  }
-  // Wenn das Gericht noch nicht im Warenkorb ist, füge es hinzu
+  let found = updateBasketAmount(item);
   if (!found) {
-    basket.push({
-      name: dish.name,
-      price: dish.price,
-      description: dish.description,
-      amount: 1, // Setzt die Menge des neuen Gerichts auf 1
-    });
+    addNewItemToBasket(item);
   }
   saveToLocalStorage();
   renderBasket();
+  triggerBasketGrow();
 }
 
-function addTapasToBasket(tapasIndex) {
-  let tapa = tapas[tapasIndex];
-  let found = false;
+function getItemByArrayName(itemIndex, arrayName) {
+  if (arrayName === "dishes") {
+    return dishes[itemIndex];
+  } else if (arrayName === "tapas") {
+    return tapas[itemIndex];
+  } else if (arrayName === "postres") {
+    return postres[itemIndex];
+  } else if (arrayName === "drinks") {
+    return drinks[itemIndex];
+  }
+  return null;
+}
 
+function addNewItemToBasket(item) {
+  basket.push({
+    name: item.name,
+    price: item.price,
+    description: item.description,
+    amount: 1,
+  });
+}
+
+function updateBasketAmount(item) {
   for (let i = 0; i < basket.length; i++) {
-    if (basket[i].name === tapa.name) {
+    if (basket[i].name === item.name) {
       basket[i].amount++;
-      found = true;
-      break;
+      return true;
     }
   }
-  if (!found) {
-    basket.push({
-      name: tapa.name,
-      price: tapa.price,
-      description: tapa.description,
-      amount: 1,
-    });
-  }
-  saveToLocalStorage();
-  renderBasket();
+  return false;
 }
 
-function addPostresToBasket(postreIndex) {
-  let postre = postres[postreIndex];
-  let found = false;
-
-  for (let i = 0; i < basket.length; i++) {
-    if (basket[i].name === postre.name) {
-      basket[i].amount++;
-      found = true;
-      break;
-    }
-  }
-  if (!found) {
-    basket.push({
-      name: postre.name,
-      price: postre.price,
-      description: postre.description,
-      amount: 1,
-    });
-  }
-  saveToLocalStorage();
-  renderBasket();
-}
-
-//Das jeweilige Gericht wird aus dem Array Basket entfernt
 function removeFromBasket(index) {
   basket.splice(index, 1);
 
@@ -94,18 +65,72 @@ function decreaseAmount(index) {
 }
 
 function removeFromBasket(index) {
-  basket.splice(index, 1); // Entfernt das Gericht anhand des Indexes
+  basket.splice(index, 1);
 
   saveToLocalStorage();
   renderBasket();
 }
 
-function saveToLocalStorage() {
-  localStorage.setItem("basket", JSON.stringify(basket)); // Speichert den Warenkorb
-  localStorage.setItem("dishes", JSON.stringify(dishes)); // Speichert das Gericht-Array (falls erforderlich)
-  localStorage.setItem("tapas", JSON.stringify(tapas)); // Speichert das Gericht-Array (falls erforderlich)
-  localStorage.setItem("postres", JSON.stringify(postres)); // Speichert das Gericht-Array (falls erforderlich)
+function triggerBasketGrow() {
+  let basketIcon = document.querySelector('.basketIcon');
+  basketIcon.classList.add('grow');
 
+  setTimeout(() => {
+    basketIcon.classList.remove('grow');
+  }, 400);
+}
+
+function calculateDeliveryCosts(totalSum) {
+  return totalSum >= 20 ? 0 : 5;
+}
+
+function calculateTotalSum() {
+  let totalSum = 0;
+  for (let i = 0; i < basket.length; i++) {
+    totalSum += basket[i].price * basket[i].amount;
+  }
+  return totalSum;
+}
+
+function continueShopping() {
+  renderBasket();
+}
+
+function toggleBasket() {
+  let basketWrapper = document.getElementById("basketSection");
+  let body = document.body;
+
+  if (basketWrapper.classList.contains("open")) {
+    basketWrapper.classList.remove("open");
+    body.classList.remove("overlay-visible");
+    body.classList.remove("no-scroll");
+  } else {
+    basketWrapper.classList.add("open");
+    body.classList.add("overlay-visible");
+    body.classList.add("no-scroll");
+  }
+}
+
+function toggleCloseBtn() {
+  let closeButton = document.querySelector(".close-basket");
+  if (window.innerWidth <= 760) {
+    closeButton.classList.remove("d-none");
+  } 
+}
+
+function getCloseButton() {
+  if (window.innerWidth <= 760) {
+    return '<span class="close-basket" onclick="toggleBasket()">×</span>';
+  }
+  return '';
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem("basket", JSON.stringify(basket));
+  localStorage.setItem("dishes", JSON.stringify(dishes));
+  localStorage.setItem("tapas", JSON.stringify(tapas));
+  localStorage.setItem("postres", JSON.stringify(postres));
+  localStorage.setItem("drinks", JSON.stringify(drinks));
 }
 
 function loadFromLocalStorage() {
@@ -116,20 +141,41 @@ function loadFromLocalStorage() {
     dishes = JSON.parse(localStorage.getItem("dishes"));
   }
   if (localStorage.getItem("tapas")) {
-    dishes = JSON.parse(localStorage.getItem("tapas"));
+    tapas = JSON.parse(localStorage.getItem("tapas"));
   }
   if (localStorage.getItem("postres")) {
-    dishes = JSON.parse(localStorage.getItem("postres"));
+    postres = JSON.parse(localStorage.getItem("postres"));
   }
-
+  if (localStorage.getItem("drinks")) {
+    drinks = JSON.parse(localStorage.getItem("drinks"));
+  }
   renderBasket();
+  renderTapasContent();
   renderDishContent();
+  renderPostreContent();
+  renderDrinksContent();
 }
 
-function totalSum() {
-  let sum = 0;
-  for (let i = 0; i < basket.length; i++) {
-    sum += basket[i].price * basket[i].amount;
+function toggleProductInfo(category, j) {
+  let productOverlay = document.getElementById(`overlay-${category}-${j}`);
+  
+  if (productOverlay) {
+    let isHidden = productOverlay.classList.contains("d_none");
+    productOverlay.classList.toggle("d_none", !isHidden);
+
+    document.body.classList.toggle("overlay-visible", isHidden);
   }
-  return sum;
 }
+
+document.addEventListener("click", function (event) {
+  let openOverlays = document.querySelectorAll(".overlay-content:not(.d_none)");
+
+  openOverlays.forEach((overlay) => {
+    if (!overlay.contains(event.target) && !event.target.closest("ins")) {
+      let overlayId = overlay.id.split("-");
+      let category = overlayId[1];
+      let index = overlayId[2];
+      toggleProductInfo(category, index);
+    }
+  });
+});

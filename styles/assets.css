@@ -1,27 +1,174 @@
-header img {
-    width: 136px;
-    padding: 10px 0;
-    object-fit: cover;
+header img,
+footer img {
+  width: 136px;
+  padding: 10px 0;
+  object-fit: cover;
+  filter: invert(1);
 }
 
 .aot img {
-    height: 160px;
-    width: 100%;
-    object-fit: cover;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Dunkler Schatten */
-   
+  height: 140px;
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
 
+.stars {
+  display: flex;
+  gap: 5px;
+}
+
+.star {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+  box-shadow: none !important;
+}
+
+.restaurant-logo {
+  width: 100px !important;
+  height: 100px !important;
+  object-fit: contain !important;
+  box-shadow: none !important;
+  position: absolute;
+  top: 224px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.aot-images,
+.aot-images-salad {
+  object-fit: contain !important;
+  box-shadow: none !important;
+  margin-bottom: 6px !important;
 }
 
 .aot-images {
-    width: 56px !important;
-    height: 56px !important; 
-    object-fit: contain !important;
-    box-shadow: none !important;
+  width: 80px !important;
+  height: 80px !important;
 }
 
-.aot-images:hover {
-    transform: scale(1.05);
-    transition: ease-in-out 0.2s;
+.aot-images-salad {
+  width: 100px !important;
+  height: 80px !important;
+}
+.aot-images:hover,
+.aot-images-salad:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+}
+
+.order-btn {
+  width: 44px;
+  aspect-ratio: 1;
+  object-fit: contain;
+  filter: sepia(1) saturate(5) hue-rotate(-35deg);
+  transition: filter 0.3s ease-in-out;
+  cursor: pointer;
+}
+.order-btn:hover {
+  transform: scale(1.2);
+  filter: sepia(1) saturate(10) hue-rotate(-40deg);
+}
+
+.dish-image {
+  width: 24vw;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.basketIcon {
+  position: fixed;
+  width: 64px;
+  bottom: 20px;
+  right: 50%;
+  padding: 10px;
+  background: linear-gradient(135deg, #3f87a6, #f69d3c);
+  color: black;
+  text-decoration: none;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 998;
+}
+
+@keyframes grow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.basketIcon.grow {
+  animation: grow 0.3s ease;
+  animation-iteration-count: 1;
+}
+
+.basketIcon:hover {
+  background: linear-gradient(135deg, #3f87a6, #f69d3c, #ebf8e1);
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.basketIcon:active {
+  background: linear-gradient(135deg, #f69d3c, #3f87a6, #ebf8e1);
+}
+
+@media (max-width: 760px) {
+  .dish-image {
+    height: 80px;
+  }
+  .aot-images,
+  .aot-images-salad {
+    height: 56px !important;
+    width: 56px !important;
+  }
+  .restaurant-logo {
+    width: 88px !important;
+    height: 88px !important;
+    right: 50px !important;
+    left: 80%;
+  }
+  .basketIcon {
+    display: flex;
+  }
+}
+
+@media (max-width: 500px) {
+  .aot-images {
+    height: 40px !important;
+    width: 40px !important;
+  }
+  .stars {
+    gap: 3px;
+  }
+  .star {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .aot-images-salad {
+    height: 40px !important;
+    width: 48px !important;
+  }
+  .restaurant-logo {
+    width: 50px !important;
+    height: 50px !important;
+    right: 50px !important;
+    top: 248px;
+  }
+  .dish-image {
+    width: 31vw;
+    height: 80px;
+    margin-top: 20px;
+  }
+  .order-btn {
+    width: 32px;
+  }
+  .basketIcon {
+    width: 48px;
+    padding: 8px;
+  }
 }

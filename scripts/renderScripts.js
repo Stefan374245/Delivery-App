@@ -135,6 +135,9 @@ document.addEventListener("click", function (event) {
   let basketWrapper = document.getElementById("basketSection");
   let basketIcon = document.querySelector(".basketIcon");
 
+  if (checkEvent(event.target)) {
+    return;
+  }
   if (
     basketWrapper.classList.contains("open") && 
     !basketWrapper.contains(event.target) &&
@@ -144,3 +147,9 @@ document.addEventListener("click", function (event) {
   }
 });
 
+function checkEvent(eventTarget) {
+  return eventTarget.classList.contains("increase-amount") ||
+         eventTarget.classList.contains("decrease-amount") ||
+         eventTarget.classList.contains("deleteImg") ||
+         eventTarget.classList.contains("orderBtn");
+}

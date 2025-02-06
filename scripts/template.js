@@ -183,9 +183,9 @@ function basketTemplate(i) {
   <div class="basketItem">
         <h2>${basket[i].name}</h2>
         <div class="amounts">
-          <button onclick="decreaseAmount(${i})">-</button>
+          <button class="decrease-amount" onclick="decreaseAmount(${i})">-</button>
          <p>${basket[i].amount}x</p>
-          <button onclick="increaseAmount(${i})">+</button>
+          <button class="increase-amount" onclick="increaseAmount(${i})">+</button>
         </div>
         <div class="priceDelete">
           <p class="price">${(basket[i].price * basket[i].amount).toFixed(2).replace('.', ',')}<span>€</span> </p>

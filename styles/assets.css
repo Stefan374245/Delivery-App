@@ -42,6 +42,7 @@ footer img {
   object-fit: contain !important;
   box-shadow: none !important;
   margin-bottom: 6px !important;
+  transition: 0.2s ease-in-out;
 }
 
 .aot-images {
@@ -52,11 +53,11 @@ footer img {
 .aot-images-salad {
   width: 100px !important;
   height: 80px !important;
+  transition: 0.2s ease-in-out;
 }
 .aot-images:hover,
 .aot-images-salad:hover {
   transform: scale(1.05);
-  transition: 0.2s ease-in-out;
 }
 
 .order-btn {

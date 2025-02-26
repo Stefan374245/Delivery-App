@@ -1,3 +1,13 @@
+/**
+ * @namespace Render-functions
+ * @description This module contains all functions that are related to rendering the content of the website.
+ * 
+ * @author Stefan
+ * @version 1.0
+ */
+/**
+ * This file contains all the helper functions to render the content of the website. window.addEventListener is used to render the basket when the window is resized.
+ */
 function init() {
   loadFromLocalStorage();
   renderAot();
@@ -9,7 +19,9 @@ function init() {
     renderBasket();
   });
 }
-
+/**
+ * * renderAot - Renders the stars for the rating of the restaurant.
+ */
 function renderAot() {
   let aotSection = document.getElementById("aotSection");
   aotSection.innerHTML = ``;
@@ -24,7 +36,13 @@ function renderAot() {
 
   aotSection.innerHTML += aotTemplate(rating, maxRating);
 }
-
+/**
+ * This function renders the content of the website based on the type of the item and the section where the content should be rendered.
+ * 
+ * @param {string} type - The type of the item which should be rendered.
+ * @param {string} sectionId - The id of the section where the content should be rendered.
+ * @param {string} title - The title of the section where the content should be rendered.
+ */
 function renderContent(type, sectionId, title) {
   let wrapper = document.getElementById(sectionId);
   wrapper.innerHTML = ``;
@@ -35,19 +53,27 @@ function renderContent(type, sectionId, title) {
     wrapper.innerHTML += generateTemplate(type, i);
   }
 }
-
+/**
+ * This function renders the content of the dishes section.
+ */
 function renderDishContent() {
   renderContent('dishes', 'dishesSection', 'Hauptspeisen');
 }
-
+/**
+ * This function renders the content of the tapas section.
+ */
 function renderTapasContent() {
   renderContent('tapas', 'tapasSection', 'Vorspeisen');
 }
-
+/**
+ * This function renders the content of the postres section.
+ */
 function renderPostreContent() {
   renderContent('postres', 'postreSection', 'Nachspeisen');
 }
-
+/**
+ * This function renders the content of the drinks section
+ */
 function renderDrinksContent() {
   renderContent('drinks', 'drinksSection', 'Getränke');
 }
@@ -92,6 +118,10 @@ function renderDrinksContent() {
   }
 }*/
 
+/**
+ * This function renders the basket section of the website and calculates the total sum of the items with helper functions calculateTotalSum and calculateDeliveryCosts.
+ * RenderBasket calls the helper functions renderBasketItems and renderTotal to render the items in the basket and the total sum of the items.
+ */
 function renderBasket() {
   let basketWrapper = document.getElementById("basketSection");
   basketWrapper.innerHTML = `<h2 class="subtitle">Warenkorb</h2>`;
@@ -107,13 +137,24 @@ function renderBasket() {
     renderTotal(basketWrapper, totalSum, deliveryCosts, totalWithDelivery);
   }
 }
-
+/**
+ * This function renders the items in the basket with the help of the basketTemplate.
+ * 
+ * @param {string} basketWrapper - The wrapper where the basket items should be rendered.
+ */
 function renderBasketItems(basketWrapper) {
   for (let i = 0; i < basket.length; i++) {
     basketWrapper.innerHTML += basketTemplate(i);
   }
 }
-
+/**
+ * This function renders the total sum of the items in the basket with the help of the totalTemplate.
+ * 
+ * @param {string} basketWrapper - The wrapper where the total sum should be rendered.
+ * @param {string} totalSum - The total sum of the items in the basket
+ * @param {string} deliveryCosts - The delivery costs
+ * @param {string} totalWithDelivery - The total sum of the items in the basket with the delivery costs
+ */
 function renderTotal(
   basketWrapper,
   totalSum,
@@ -122,7 +163,10 @@ function renderTotal(
 ) {
   basketWrapper.innerHTML += renderTotalTemplate(totalSum, deliveryCosts, totalWithDelivery);
 }
-
+/**
+ * This function saves the items in the basket to the local storage and retrieves them when the website is reloaded.
+ * With placeOrder the basket is emptied and the order is placed and the placeOrderTemplate is rendered.
+ */
 function placeOrder() {
   basket = [];
   saveToLocalStorage();
@@ -130,7 +174,10 @@ function placeOrder() {
   let basketWrapper = document.getElementById("basketSection");
   basketWrapper.innerHTML = placeOrderTemplate();
 }
-
+/**
+ * This function toggles the basket section of the website if the user clicks on the basket icon or beside the basket section.
+ * which eventListener is added to the document to check if the user clicks on the basket icon or beside the basket section.
+ */
 document.addEventListener("click", function (event) {
   let basketWrapper = document.getElementById("basketSection");
   let basketIcon = document.querySelector(".basketIcon");
@@ -146,7 +193,12 @@ document.addEventListener("click", function (event) {
     toggleBasket();
   }
 });
-
+/**
+ * This function checks if the event target is the increase-amount, decrease-amount, deleteImg or orderBtn. It sets the event target to the event target of the event listener.
+ * 
+ * @param {eventTarget} eventTarget - The target of the event like increase-amount, decrease-amount, deleteImg or orderBtn.
+ * @returns {boolean} - Returns true if the event target matches any of the specified classes, otherwise false.
+ */
 function checkEvent(eventTarget) {
   return eventTarget.classList.contains("increase-amount") ||
          eventTarget.classList.contains("decrease-amount") ||

@@ -1,3 +1,21 @@
+/**
+ * @namespace Template-Functions
+ * @description This module contains functions that generate HTML templates for the restaurant website.
+ * 
+ * @author Stefan
+ * @version 1.0
+ */
+
+/**
+ * This function generates an HTML template for the ranking section of the restaurant.
+ *
+ * The template includes:
+ * - An image of gambas.
+ * - A section for evaluation with a title and restaurant logo.
+ * - A rating section displaying stars.
+ * - Links to different sections of the menu (Vorspeise, Hauptspeise, Nachspeise, Getränke) with corresponding icons.
+ * @returns {string} The HTML template as a string.
+ */
 function aotTemplate() {
   return `
     <img src="./assets/img/gambas2.jpg" alt="gamba-img" />
@@ -35,6 +53,12 @@ function aotTemplate() {
   `;
 }
 
+/**
+ * This function checks which type of item should be rendered and returns the corresponding array.
+ * 
+ * @param {string} type - The type of the item which should be rendered.
+ * @returns {Array} The array of items based on the type.
+ */
 function getItemsByType(type) {
   switch(type) {
     case 'dishes':
@@ -50,6 +74,13 @@ function getItemsByType(type) {
   }
 }
 
+/**
+ * This function generates an HTML template for a dish card based on the provided type and index.
+ *
+ * @param {string} type - The type of items to generate the template for.
+ * @param {number} j - The index of the item within the type.
+ * @returns {string} The generated HTML template as a string or an empty string if no items are found.
+ */
 function generateTemplate(type, j) {
   const items = getItemsByType(type);
 
@@ -175,6 +206,12 @@ function drinksTemplate(j) {
   `;
 }*/
 
+/**
+ * This function generates the HTML template for the basket.
+ *
+ * @param {number} i - The index of the item in the basket array.
+ * @returns {string} The HTML string representing the basket item.
+ */
 function basketTemplate(i) {
   let closeButton = getCloseButton();
   
@@ -196,6 +233,14 @@ function basketTemplate(i) {
   `;
 }
 
+/**
+ * This function generates the HTML template for an empty basket message.
+ *
+ * This template includes a subtitle prompting the user to fill their basket
+ * and a paragraph encouraging them to add dishes from the menu.
+ *
+ * @returns {string} The HTML string for the empty basket message.
+ */
 function emptyBasketTemplate() {
   let closeButton = getCloseButton();
   return `
@@ -204,6 +249,11 @@ function emptyBasketTemplate() {
     `
 }
 
+/**
+ * This function generates the HTML template for the order confirmation message.
+ *
+ * @returns {string} The HTML string for the order confirmation message.
+ */
 function placeOrderTemplate() {
   return `
     <h3>Wir haben ihre Bestellung erhalten und wird bearbeitet.</h3>
@@ -211,6 +261,14 @@ function placeOrderTemplate() {
   `;
 }
 
+/**
+ * This function generates an HTML template for displaying the total price, delivery costs, and the total cost with delivery.
+ *
+ * @param {number} totalSum - The subtotal amount.
+ * @param {number} deliveryCosts - The delivery costs.
+ * @param {number} totalWithDelivery - The total amount including delivery costs.
+ * @returns {string} The HTML template as a string.
+ */
 function renderTotalTemplate(totalSum, deliveryCosts, totalWithDelivery) {
   return `<div class="totalPrice">
       <h4>Zwischensumme: ${totalSum.toFixed(2).replace('.', ',')} €</h4>

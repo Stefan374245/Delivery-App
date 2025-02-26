@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: basket.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: basket.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @namespace Basket-functions
+ * @description This module contains all functions that are related to the basket section of the website.
+ * 
+ * @author Stefan
+ * @version 1.0
+ */
+/**
+ * Th function renders the basket items and the total sum.
+ * Uses several helper functions to render the basket items and the total sum.
+ * 
+ * @param {number} itemIndex - The index of the item in the array
+ * @param {string} arrayName - The name of the array from which the item is taken
+ * @returns {void}
+ */
+function addToBasket(itemIndex, arrayName) {
+  let item = getItemByArrayName(itemIndex, arrayName);
+  if (!item) return;
+
+  let found = updateBasketAmount(item);
+  if (!found) {
+    addNewItemToBasket(item);
+  }
+  saveToLocalStorage();
+  renderBasket();
+  triggerBasketGrow();
+}
+
+/**
+ * This function returns the item from the array based on the array name and the index of the item by using a switch statement.
+ * 
+ * @param {string} itemIndex - The index of the item in the array.
+ * @param {string} arrayName - The name of the array from which the item is taken.
+ * @returns - The item from the array.
+ */
+function getItemByArrayName(itemIndex, arrayName) {
+  switch (arrayName) {
+    case "dishes":
+      return dishes[itemIndex];
+    case "tapas":
+      return tapas[itemIndex];
+    case "postres":
+      return postres[itemIndex];
+    case "drinks":
+      return drinks[itemIndex];
+    default:
+      return null;
+  }
+}
+
+/**
+ * This function adds a new item to the basket by pushing key-value pairs to the basket array.
+ * 
+ * @param {string} item - The item that should be added to the basket.
+ */
+function addNewItemToBasket(item) {
+  basket.push({
+    name: item.name,
+    price: item.price,
+    description: item.description,
+    amount: 1,
+  });
+}
+
+/**
+ * This function updates the amount of an item in the basket by increasing the amount by 1.
+ * 
+ * @param {string} item - The item that should be updated.
+ * @returns - True if the item was found and updated, false if the item was not found.
+ */
+function updateBasketAmount(item) {
+  for (let i = 0; i &lt; basket.length; i++) {
+    if (basket[i].name === item.name) {
+      basket[i].amount++;
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * This function splices the item from the basket array based on the index of the item, which means that the item is removed from the basket.
+ * 
+ * @param {number} index - The index of the item in the basket array.
+ */
+function removeFromBasket(index) {
+  basket.splice(index, 1);
+
+  saveToLocalStorage();
+  renderBasket();
+}
+
+/**
+ * This function increases the amount of an item in the basket by 1 and saves the basket to the local storage.Renderbasket is called to render the basket.
+ * @param {number} index - The index of the item in the basket array.
+ */
+function increaseAmount(index) {
+  basket[index].amount++;
+  saveToLocalStorage();
+  renderBasket();
+}
+
+/**
+ * This function decreases the amount of an item in the basket by 1 and saves the basket to the local storage. Renderbasket is called to render the basket.
+ * 
+ * @param {number} index - The index of the item in the basket array.
+ */
+function decreaseAmount(index) {
+  if (basket[index].amount > 1) {
+    basket[index].amount--;
+  }
+  saveToLocalStorage();
+  renderBasket();
+}
+
+/**
+ * This function triggers the basket to grow by adding the class grow to the basket icon and removing it after 400ms with a setTimeout function.
+ * setTimeout is used to remove the class after 400ms to trigger the animation again if the user adds another item to the basket.
+ * return {void}
+ */
+function triggerBasketGrow() {
+  let basketIcon = document.querySelector('.basketIcon');
+  basketIcon.classList.add('grow');
+
+  setTimeout(() => {
+    basketIcon.classList.remove('grow');
+  }, 400);
+}
+
+/**
+ * This function is checkinf if the total sum is greater or equal to 20 and returns 0 if it is true and 5 if it is false.
+ * 
+ * @param {number} totalSum 
+ * @returns {number} - The delivery cost based on the total sum.
+ */
+function calculateDeliveryCosts(totalSum) {
+  return totalSum >= 20 ? 0 : 5;
+}
+/**
+ * This function calculates the total sum of the items in the basket by iterating over the basket array and multiplying the price of the item with the amount of the item.
+ * @returns {number} - The total sum of the items in the basket.
+ */
+function calculateTotalSum() {
+  let totalSum = 0;
+  for (let i = 0; i &lt; basket.length; i++) {
+    totalSum += basket[i].price * basket[i].amount;
+  }
+  return totalSum;
+}
+
+/**
+ * This function allows the user to continue shopping after placing an order by rendering the basket.
+ */
+function continueShopping() {
+  renderBasket();
+}
+
+/**
+ * This function toggles the basket section of the website if the user clicks on the basket icon or beside the basket section.
+ */
+function toggleBasket() {
+  let basketWrapper = document.getElementById("basketSection");
+  let body = document.body;
+
+  if (basketWrapper.classList.contains("open")) {
+    basketWrapper.classList.remove("open");
+    body.classList.remove("overlay-visible");
+    body.classList.remove("no-scroll");
+  } else {
+    basketWrapper.classList.add("open");
+    body.classList.add("overlay-visible");
+    body.classList.add("no-scroll");
+  }
+}
+
+/**
+ * This function remove the close button if the window width is greater than 760px and the close button is visible.
+ */
+function toggleCloseBtn() {
+  let closeButton = document.querySelector(".close-basket");
+  if (window.innerWidth &lt;= 760) {
+    closeButton.classList.remove("d-none");
+  } 
+}
+
+/**
+ * This function returns the close button if the window width is less than or equal to 760px.
+ * @returns {string} - The HTML string for the close button if the window width is less than or equal to 760px.
+ */
+function getCloseButton() {
+  if (window.innerWidth &lt;= 760) {
+    return '&lt;span class="close-basket" onclick="toggleBasket()">×&lt;/span>';
+  }
+  return '';
+}
+
+/**
+ * This function saves the items in the basket to the local storage.
+ */
+function saveToLocalStorage() {
+  localStorage.setItem("basket", JSON.stringify(basket));
+  localStorage.setItem("dishes", JSON.stringify(dishes));
+  localStorage.setItem("tapas", JSON.stringify(tapas));
+  localStorage.setItem("postres", JSON.stringify(postres));
+  localStorage.setItem("drinks", JSON.stringify(drinks));
+}
+
+/**
+ * This function retrieves the items from the local storage when the website is reloaded.
+ */
+function loadFromLocalStorage() {
+  if (localStorage.getItem("basket")) {
+    basket = JSON.parse(localStorage.getItem("basket"));
+  }
+  if (localStorage.getItem("dishes")) {
+    dishes = JSON.parse(localStorage.getItem("dishes"));
+  }
+  if (localStorage.getItem("tapas")) {
+    tapas = JSON.parse(localStorage.getItem("tapas"));
+  }
+  if (localStorage.getItem("postres")) {
+    postres = JSON.parse(localStorage.getItem("postres"));
+  }
+  if (localStorage.getItem("drinks")) {
+    drinks = JSON.parse(localStorage.getItem("drinks"));
+  }
+  renderBasket();
+  renderTapasContent();
+  renderDishContent();
+  renderPostreContent();
+  renderDrinksContent();
+}
+
+/**
+ * This function toggles the product info by different categories and indexes like tapas, postres, drinks.
+ * 
+ * @param {string} category - The category of the product.
+ * @param {number} j - The index of the product in the array. 
+ */
+function toggleProductInfo(category, j) {
+  let productOverlay = document.getElementById(`overlay-${category}-${j}`);
+  
+  if (productOverlay) {
+    let isHidden = productOverlay.classList.contains("d_none");
+    productOverlay.classList.toggle("d_none", !isHidden);
+
+    document.body.classList.toggle("overlay-visible", isHidden);
+  }
+}
+
+/**
+ * This function toggles the product info by different categories and indexes like tapas, postres, drinks.
+ */
+document.addEventListener("click", function (event) {
+  let openOverlays = document.querySelectorAll(".overlay-content:not(.d_none)");
+
+  openOverlays.forEach((overlay) => {
+    if (!overlay.contains(event.target) &amp;&amp; !event.target.closest("ins")) {
+      let overlayId = overlay.id.split("-");
+      let category = overlayId[1];
+      let index = overlayId[2];
+      toggleProductInfo(category, index);
+    }
+  });
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Basket-functions.html">Basket-functions</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addNewItemToBasket">addNewItemToBasket</a></li><li><a href="global.html#addToBasket">addToBasket</a></li><li><a href="global.html#calculateDeliveryCosts">calculateDeliveryCosts</a></li><li><a href="global.html#calculateTotalSum">calculateTotalSum</a></li><li><a href="global.html#continueShopping">continueShopping</a></li><li><a href="global.html#decreaseAmount">decreaseAmount</a></li><li><a href="global.html#getCloseButton">getCloseButton</a></li><li><a href="global.html#getItemByArrayName">getItemByArrayName</a></li><li><a href="global.html#increaseAmount">increaseAmount</a></li><li><a href="global.html#loadFromLocalStorage">loadFromLocalStorage</a></li><li><a href="global.html#removeFromBasket">removeFromBasket</a></li><li><a href="global.html#saveToLocalStorage">saveToLocalStorage</a></li><li><a href="global.html#toggleBasket">toggleBasket</a></li><li><a href="global.html#toggleCloseBtn">toggleCloseBtn</a></li><li><a href="global.html#toggleProductInfo">toggleProductInfo</a></li><li><a href="global.html#triggerBasketGrow">triggerBasketGrow</a></li><li><a href="global.html#updateBasketAmount">updateBasketAmount</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Feb 07 2025 10:53:54 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

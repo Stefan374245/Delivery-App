@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: template.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: template.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @namespace Template-Functions
+ * @description This module contains functions that generate HTML templates for the restaurant website.
+ * 
+ * @author Stefan
+ * @version 1.0
+ */
+
+/**
+ * This function generates an HTML template for the ranking section of the restaurant.
+ *
+ * The template includes:
+ * - An image of gambas.
+ * - A section for evaluation with a title and restaurant logo.
+ * - A rating section displaying stars.
+ * - Links to different sections of the menu (Vorspeise, Hauptspeise, Nachspeise, Getränke) with corresponding icons.
+ * @returns {string} The HTML template as a string.
+ */
+function aotTemplate() {
+  return `
+    &lt;img src="./assets/img/gambas2.jpg" alt="gamba-img" />
+    &lt;div class="evaluationSection">
+          &lt;h1>Best Tapas
+          &lt;img class="restaurant-logo" src="./assets/Logo/restaurantLogo.png" alt="restaurantLogo">
+          &lt;/h1>
+
+      &lt;div class="stars">Bewertung :
+        ${stars}
+      &lt;/div>
+    &lt;/div>
+        &lt;hr>
+        &lt;hr>
+    &lt;div class="aotImgSection">
+        &lt;a href="#tapasSection">
+          &lt;img class="aot-images-salad" src="./assets/Favicon/tapasIcon.png" alt="tapasIcon">
+          &lt;p>Vorspeise&lt;/p>
+        &lt;/a>
+        &lt;a href="#dishesSection">
+          &lt;img class="aot-images" src="./assets/Favicon/mainFood-Icon.png" alt="mainFoodIcon">
+          &lt;p>Hauptspeise&lt;/p>
+        &lt;/a>
+        &lt;a href="#postreSection">
+          &lt;img class="aot-images" src="./assets/Favicon/postre-icon.png" alt="postreIcon">
+          &lt;p>Nachspeise&lt;/p>
+        &lt;/a>
+        &lt;a href="#drinksSection">
+          &lt;img class="aot-images" src="./assets/Favicon/drinks.png" alt="drinkIcon">
+          &lt;p>Getränke&lt;/p>
+        &lt;/a>
+    &lt;/div>
+          &lt;hr>
+          &lt;hr>
+  `;
+}
+
+/**
+ * This function checks which type of item should be rendered and returns the corresponding array.
+ * 
+ * @param {string} type - The type of the item which should be rendered.
+ * @returns {Array} The array of items based on the type.
+ */
+function getItemsByType(type) {
+  switch(type) {
+    case 'dishes':
+      return dishes;
+    case 'tapas':
+      return tapas;
+    case 'postres':
+      return postres;
+    case 'drinks':
+      return drinks;
+    default:
+      return [];
+  }
+}
+
+/**
+ * This function generates an HTML template for a dish card based on the provided type and index.
+ *
+ * @param {string} type - The type of items to generate the template for.
+ * @param {number} j - The index of the item within the type.
+ * @returns {string} The generated HTML template as a string or an empty string if no items are found.
+ */
+function generateTemplate(type, j) {
+  const items = getItemsByType(type);
+
+  if (items.length === 0) {
+    return '';
+  }
+  return `
+    &lt;div class="dishCard">
+      &lt;div class="dish-info">
+        &lt;h2>${items[j].name} &lt;/h2>
+        &lt;ins onclick="toggleProductInfo('${type}', ${j})">Produktinfo&lt;/ins>
+        &lt;p>${items[j].description}&lt;/p>
+        &lt;p class="price">${items[j].price.toFixed(2).replace('.', ',')}&lt;span>€&lt;/span>&lt;/p>
+      &lt;/div>
+      &lt;div class="dish-img">
+        &lt;img src="${items[j].images}" alt="image ${items[j].name}" class="dish-image">
+      &lt;/div>
+      &lt;div class="add-to-basket">
+        &lt;img class="order-btn" onclick="addToBasket(${j}, '${type}')" src="./assets/Favicon/addCard.png" alt="addImg">
+      &lt;/div>
+    &lt;/div>    
+    &lt;div id="overlay-${type}-${j}" class="overlay-content d_none">
+      &lt;span class="close" onclick="toggleProductInfo('${type}', ${j})">&amp;times;&lt;/span>
+      &lt;h3>Zutaten&lt;/h3>
+      &lt;p> ${items[j].ingredients}&lt;/p>
+    &lt;/div>
+  `;
+}
+/*
+function dishTemplate(j) {
+  return `
+      &lt;div class="dishCard">
+      &lt;div class="dish-info">
+        &lt;h2>${dishes[j].name} &lt;/h2>
+        &lt;ins onclick="toggleProductInfo('dishes', ${j})">Produktinfo&lt;/ins>
+        &lt;p>${dishes[j].description}&lt;/p>
+        &lt;p class="price">${dishes[j].price.toFixed(2).replace('.', ',')}&lt;span>€&lt;/span>&lt;/p>
+      &lt;/div>
+      &lt;div class="dish-img">
+      &lt;img src="${dishes[j].images}" alt="image ${dishes[j].name}" class="dish-image">
+      &lt;/div>
+      &lt;div class="add-to-basket">
+       &lt;img class="order-btn" onclick="addToBasket(${j}, 'dishes')" src="./assets/Favicon/addCard.png" alt="addImg">
+      &lt;/div>
+    &lt;/div>    
+          &lt;div id="overlay-dishes-${j}" class="overlay-content d_none">
+            &lt;span class="close" onclick="toggleProductInfo('dishes', ${j})">&amp;times;&lt;/span>
+            &lt;h3>Zutaten&lt;/h3>
+            &lt;p> ${dishes[j].ingredients}&lt;/p>
+        &lt;/div>
+`;
+}
+
+function tapasTemplate(j) {
+  return `
+   &lt;div class="dishCard">
+      &lt;div class="dish-info">
+        &lt;h2>${tapas[j].name} &lt;/h2>
+        &lt;ins onclick="toggleProductInfo('tapas', ${j})">Produktinfo&lt;/ins>
+        &lt;p>${tapas[j].description}&lt;/p>
+        &lt;p class="price">${tapas[j].price.toFixed(2).replace('.', ',')}&lt;span>€&lt;/span>&lt;/p>
+      &lt;/div>
+      &lt;div class="dish-img">
+      &lt;img src="${tapas[j].images}" alt="image ${tapas[j].name}" class="dish-image">
+      &lt;/div>
+      &lt;div class="add-to-basket">
+       &lt;img class="order-btn" onclick="addToBasket(${j}, 'tapas')" src="./assets/Favicon/addCard.png" alt="addImg">
+      &lt;/div>
+    &lt;/div>   
+          &lt;div id="overlay-tapas-${j}" class="overlay-content d_none">
+            &lt;span class="close" onclick="toggleProductInfo('tapas', ${j})">&amp;times;&lt;/span>
+            &lt;h3>Zutaten&lt;/h3>
+            &lt;p> ${tapas[j].ingredients}&lt;/p>
+        &lt;/div>
+  `;
+}
+
+function postreTemplate(j) {
+  return `
+   &lt;div class="dishCard">
+      &lt;div class="dish-info">
+        &lt;h2>${postres[j].name} &lt;/h2>
+        &lt;ins onclick="toggleProductInfo('postres', ${j})">Produktinfo&lt;/ins>
+        &lt;p>${postres[j].description}&lt;/p>
+        &lt;p class="price">${postres[j].price.toFixed(2).replace('.', ',')}&lt;span>€&lt;/span>&lt;/p>
+      &lt;/div>
+      &lt;div class="dish-img">
+      &lt;img src="${postres[j].images}" alt="image ${postres[j].name}" class="dish-image">
+      &lt;/div>
+      &lt;div class="add-to-basket">
+       &lt;img class="order-btn" onclick="addToBasket(${j}, 'postres')" src="./assets/Favicon/addCard.png" alt="addImg">
+      &lt;/div>
+    &lt;/div>   
+          &lt;div id="overlay-postres-${j}" class="overlay-content d_none">
+            &lt;span class="close" onclick="toggleProductInfo('postres', ${j})">&amp;times;&lt;/span>
+            &lt;h3>Zutaten&lt;/h3>
+            &lt;p> ${postres[j].ingredients}&lt;/p>
+        &lt;/div>
+  `;
+}
+
+function drinksTemplate(j) {
+  return `
+   &lt;div class="dishCard">
+      &lt;div class="dish-info">
+        &lt;h2>${drinks[j].name} &lt;/h2>
+        &lt;ins onclick="toggleProductInfo('drinks', ${j})">Produktinfo&lt;/ins>
+        &lt;p>${drinks[j].description}&lt;/p>
+        &lt;p class="price">${drinks[j].price.toFixed(2).replace('.', ',')}&lt;span>€&lt;/span>&lt;/p>
+      &lt;/div>
+      &lt;div class="dish-img">
+      &lt;img src="${drinks[j].images}" alt="image ${drinks[j].name}" class="dish-image">
+      &lt;/div>
+      &lt;div class="add-to-basket">
+       &lt;img class="order-btn" onclick="addToBasket(${j}, 'drinks')" src="./assets/Favicon/addCard.png" alt="addImg">
+      &lt;/div>
+    &lt;/div>    
+          &lt;div id="overlay-drinks-${j}" class="overlay-content d_none">
+            &lt;span class="close" onclick="toggleProductInfo('drinks', ${j})">&amp;times;&lt;/span>
+            &lt;h3>Zutaten&lt;/h3>
+            &lt;p> ${drinks[j].ingredients}&lt;/p>
+        &lt;/div>
+  `;
+}*/
+
+/**
+ * This function generates the HTML template for the basket.
+ *
+ * @param {number} i - The index of the item in the basket array.
+ * @returns {string} The HTML string representing the basket item.
+ */
+function basketTemplate(i) {
+  let closeButton = getCloseButton();
+  
+  return `
+   ${closeButton}
+  &lt;div class="basketItem">
+        &lt;h2>${basket[i].name}&lt;/h2>
+        &lt;div class="amounts">
+          &lt;button class="decrease-amount" onclick="decreaseAmount(${i})">-&lt;/button>
+         &lt;p>${basket[i].amount}x&lt;/p>
+          &lt;button class="increase-amount" onclick="increaseAmount(${i})">+&lt;/button>
+        &lt;/div>
+        &lt;div class="priceDelete">
+          &lt;p class="price">${(basket[i].price * basket[i].amount).toFixed(2).replace('.', ',')}&lt;span>€&lt;/span> &lt;/p>
+          &lt;img class="deleteImg" onclick="removeFromBasket(${i})" src="./assets/Favicon/delete.png" alt="deleteImg">
+        &lt;/div>
+      &lt;/div>
+      &lt;hr>
+  `;
+}
+
+/**
+ * This function generates the HTML template for an empty basket message.
+ *
+ * This template includes a subtitle prompting the user to fill their basket
+ * and a paragraph encouraging them to add dishes from the menu.
+ *
+ * @returns {string} The HTML string for the empty basket message.
+ */
+function emptyBasketTemplate() {
+  let closeButton = getCloseButton();
+  return `
+    &lt;h3 class="subtitle">Fülle deinen Warenkorb  ${closeButton}&lt;/h3>
+    &lt;p>Füge einige leckere Gerichte aus der Speisekarte hinzu.&lt;/p>
+    `
+}
+
+/**
+ * This function generates the HTML template for the order confirmation message.
+ *
+ * @returns {string} The HTML string for the order confirmation message.
+ */
+function placeOrderTemplate() {
+  return `
+    &lt;h3>Wir haben ihre Bestellung erhalten und wird bearbeitet.&lt;/h3>
+     &lt;button class="orderBtn" id="continueShoppingButton" onclick="continueShopping()">Weiter einkaufen&lt;/button>
+  `;
+}
+
+/**
+ * This function generates an HTML template for displaying the total price, delivery costs, and the total cost with delivery.
+ *
+ * @param {number} totalSum - The subtotal amount.
+ * @param {number} deliveryCosts - The delivery costs.
+ * @param {number} totalWithDelivery - The total amount including delivery costs.
+ * @returns {string} The HTML template as a string.
+ */
+function renderTotalTemplate(totalSum, deliveryCosts, totalWithDelivery) {
+  return `&lt;div class="totalPrice">
+      &lt;h4>Zwischensumme: ${totalSum.toFixed(2).replace('.', ',')} €&lt;/h4>
+      &lt;p>Lieferkosten: ${deliveryCosts.toFixed(2).replace('.', ',')} €&lt;/p>
+      &lt;h3>Gesamtkosten: ${totalWithDelivery.toFixed(2).replace('.', ',')} €&lt;/h3>
+    &lt;/div>
+    &lt;hr>
+    &lt;hr>
+    &lt;button class="orderBtn" onclick="placeOrder()" id="orderButton">Bestellen&lt;/button>
+  `
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Template-Functions.html">Template-Functions</a></li></ul><h3>Global</h3><ul><li><a href="global.html#aotTemplate">aotTemplate</a></li><li><a href="global.html#basketTemplate">basketTemplate</a></li><li><a href="global.html#emptyBasketTemplate">emptyBasketTemplate</a></li><li><a href="global.html#generateTemplate">generateTemplate</a></li><li><a href="global.html#getItemsByType">getItemsByType</a></li><li><a href="global.html#placeOrderTemplate">placeOrderTemplate</a></li><li><a href="global.html#renderTotalTemplate">renderTotalTemplate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Feb 07 2025 10:54:17 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
